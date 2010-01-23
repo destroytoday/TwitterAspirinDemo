@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx">
+	
+	<s:states>
+		<s:State name="requestToken" />
+		<s:State name="pin" />
+		<s:State name="verifyAccessToken" />
+		<s:State name="authorized" />
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.events.MouseEvent;
+			
+			import org.osflash.signals.Signal;
+			[Bindable]
+			public var requestToken:String;
+			
+			[Bindable]
+			public var pin:uint;
+			
+			[Bindable]
+			public var accessToken:String;
+			
+			public var requestTokenClickSignal:Signal = new Signal();
+			
+			public var authorizeClickSignal:Signal = new Signal();
+			
+			public var verifyAccessTokenClickSignal:Signal = new Signal();
+			
+			public var logoutClickSignal:Signal = new Signal();
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout gap="10" />
+	</s:layout>
+
+	<s:HGroup gap="5">
+		<s:Label text="status:" />
+		<s:Label id="status" text="idle" />
+	</s:HGroup>
+	
+	<s:HGroup gap="5" includeInLayout="{requestToken != null}" visible="{requestToken != null}">
+		<s:Label text="request token:" />
+		<s:Label id="requestTokenText" text="{requestToken}" />
+	</s:HGroup>
+	
+	<s:HGroup gap="5" includeInLayout="{pin > 0}" visible="{pin > 0}">
+		<s:Label text="pin:" />
+		<s:Label id="pinText" text="{pin}" />
+	</s:HGroup>
+	
+	<s:HGroup gap="5" includeInLayout="{accessToken != null}" visible="{accessToken != null}">
+		<s:Label text="access token:" />
+		<s:Label id="accessTokenText" text="{accessToken}" />
+	</s:HGroup>
+	
+	<s:Button id="requestTokenButton" label="Request Token" includeIn="requestToken" click="requestTokenClickSignal.dispatch()" />
+	
+	<s:VGroup includeIn="pin" gap="10">
+		<s:HGroup gap="10">
+			<s:TextInput id="pinInput" 
+						 focusIn="{if (pinInput.text == '[pin]') pinInput.text = ''}" 
+						 focusOut="{if (pinInput.text == '') pinInput.text = '[pin]'}" />
+			<s:Button id="authorizeButton" label="Authorize" click="authorizeClickSignal.dispatch()" />
+		</s:HGroup>
+		<s:CheckBox id="rememberAccessToken" label="remember me" />
+		<s:CheckBox id="skipVerification" label="skip verification" />
+	</s:VGroup>
+	
+	<s:Button id="verifyAccessTokenButton" label="Verify Access Token" includeIn="verifyAccessToken" click="verifyAccessTokenClickSignal.dispatch()" />
+			
+	<s:Button id="logout" label="Logout" includeIn="authorized" click="logoutClickSignal.dispatch()" />
+</s:Group>
